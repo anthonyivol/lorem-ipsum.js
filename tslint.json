@@ -1,0 +1,13 @@
+{
+  "rulesDirectory": ["tslint-config-prettier", "tslint-plugin-prettier"],
+  "rules": {
+    "prettier": [
+      true,
+      { 
+        "singleQuote": true,
+        "semi": false,
+        "trailingComma": "es5"
+      }
+    ]
+  }
+}
