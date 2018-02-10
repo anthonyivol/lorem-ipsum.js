@@ -1,58 +1,65 @@
-require('seedrandom')
+import capitalize from '../util/capitalize'
+import randomSeed from 'random-seed'
+import { words } from './dictionary'
 
-interface Bounds {
+export interface Bounds {
   min: number
   max: number
 }
 
-interface Prng {
+export interface Prng {
   (): number
 }
 
-interface Seedrandom {
+export interface SeedRandom {
   new (seed?: string): Prng
 }
 
-interface Math {
-  seedrandom: Seedrandom
+export interface Math {
+  seedrandom: SeedRandom
 }
 
-interface GeneratorOptions {
-  paragraphs: Bounds
-  sentences: Bounds
+export interface GeneratorOptions {
+  sentencesPerParagraph: Bounds
+  wordsPerSentence: Bounds
   random?: Prng
   seed?: string
-  words: string[]
+  customWords?: string[]
 }
 
 class Generator {
-  paragraphs: Bounds
-  sentences: Bounds
+  sentencesPerParagraph: Bounds
+  wordsPerSentence: Bounds
   random: Prng
   words: string[]
 
   constructor({
-    paragraphs = { min: 3, max: 7 },
-    sentences = { min: 5, max: 15 },
+    sentencesPerParagraph = { min: 3, max: 7 },
+    wordsPerSentence = { min: 5, max: 15 },
     random,
     seed,
-    words,
+    customWords,
   }: GeneratorOptions) {
-    if (paragraphs.min > paragraphs.max) {
-      throw new Error('Minimum number of paragraphs cannot exceed maximum')
+    if (sentencesPerParagraph.min > sentencesPerParagraph.max) {
+      throw new Error(
+        'Minimum number of sentences per paragraph cannot exceed maximum'
+      )
     }
 
-    if (sentences.min > sentences.max) {
-      throw new Error('Minimum number of sentences cannot exceed maximum')
+    if (wordsPerSentence.min > wordsPerSentence.max) {
+      throw new Error(
+        'Minimum number of words per sentence cannot exceed maximum'
+      )
     }
 
-    this.paragraphs = paragraphs
-    this.sentences = sentences
+    this.sentencesPerParagraph = sentencesPerParagraph
+    this.wordsPerSentence = wordsPerSentence
+    this.words = customWords || words
 
     if (random) {
       this.random = random
     } else if (seed) {
-      this.random = new Math.seedrandom(seed)
+      this.random = randomSeed.create(seed).random
     } else {
       this.random = Math.random
     }
@@ -62,22 +69,42 @@ class Generator {
     return Math.floor(this.random() * (max - min + 1) + min)
   }
 
-  pluckRandomWord() {
+  generateRandomSentence(): string {
+    const words = []
+    const { min, max } = this.wordsPerSentence
+
+    let cursor = 0
+    const bound = this.generateRandomInteger(min, max)
+
+    while (cursor < bound) {
+      words.push(this.pluckRandomWord())
+      cursor++
+    }
+
+    return capitalize(words.join(' '))
+  }
+
+  generateRandomParagraph(): string {
+    const sentences = []
+    const { min, max } = this.sentencesPerParagraph
+
+    let cursor = 0
+    const bound = this.generateRandomInteger(min, max)
+
+    while (cursor < bound) {
+      sentences.push(this.generateRandomSentence())
+      cursor++
+    }
+
+    return sentences.join('. ').trim()
+  }
+
+  pluckRandomWord(): string {
     const min = 0
     const max = this.words.length - 1
     const index = this.generateRandomInteger(min, max)
     return this.words[index]
   }
-
-  generateRandomSentence() {
-    let sentence = ''
-    let { min, max } = this.sentences
-
-    while (min < max) {
-      sentence += ` ${this.pluckRandomWord()}`
-      min++
-    }
-
-    return sentence.slice(1).charAt(0).toUpperCase + sentence.slice(1)
-  }
 }
+
+export default Generator
