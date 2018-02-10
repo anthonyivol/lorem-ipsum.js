@@ -6,7 +6,7 @@ lorem-ipsum.js is compatible with the browser, Node.js, and React Native.
 
 ## Notes
 
-The "copy to clipboard" feature is compatible on Mac and Windows systems. Linux users will need to install xclip to use this feature. To install xclip on Ubunut: `sudo apt-get install xclip`.
+The "copy to clipboard" feature is compatible on Mac and Windows systems. Linux users will need to install xclip to use this feature. To install xclip on Ubuntu: `sudo apt-get install xclip`.
 
 ## License
 
