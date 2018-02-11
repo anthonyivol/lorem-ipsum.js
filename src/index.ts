@@ -1,12 +1,36 @@
-/*
-export class LoremIpsum() {
-  // This class is an improved interface that lets you 
-  // create generator instances so you don't have to 
-  // keep passing options.
-}
-*/
+import Generator, { GeneratorOptions, Prng } from './lib/generator'
+import makeArrayOfStrings from './util/makeArrayOfStrings'
 
-import Generator, { Prng } from './lib/generator'
+const FORMATS = ['plain', 'html']
+
+export class LoremIpsum {
+  generator: Generator
+
+  constructor(options: GeneratorOptions, format: string = 'plain') {
+    if (FORMATS.indexOf(format) === -1) {
+      throw new Error(
+        `${format} is an invalid format. Please use ${FORMATS.join(' or ')}.`
+      )
+    }
+
+    this.generator = new Generator(options)
+  }
+
+  generateWords(num: number): string {
+    const makeString = this.generator.pluckRandomWord.bind(this)
+    return makeArrayOfStrings(num, makeString).join(' ')
+  }
+
+  generateSentences(num: number): string {
+    const makeString = this.generator.generateRandomSentence.bind(this)
+    return `${makeArrayOfStrings(num, makeString).join('. ')}.`
+  }
+
+  generateParagraphs(num: number): string {
+    const makeString = this.generator.generateRandomParagraph.bind(this)
+    return makeArrayOfStrings(num, makeString).join(' ')
+  }
+}
 
 export interface LoremIpsumParams {
   count?: number
@@ -21,7 +45,7 @@ export interface LoremIpsumParams {
 }
 
 const loremIpsum = ({
-  count = 1,
+  count = 1,{
   format = 'plain',
   paragraphLowerBound = 3,
   paragraphUpperBound = 7,
@@ -31,19 +55,34 @@ const loremIpsum = ({
   units = 'sentences',
   words,
 }: LoremIpsumParams): string => {
-  const generator = new Generator({
-    paragraphs: {
+  const options = {
+    sentencesPerParagraph: {
       min: paragraphLowerBound,
       max: paragraphUpperBound,
     },
-    sentences: {
+    wordsPerSentence: {
       min: sentenceLowerBound,
       max: sentenceUpperBound,
     },
+    random,
     words,
-  })
+  }
 
-  return ''
+  const generator = new LoremIpsum(options, format)
+
+  switch (units) {
+    case 'paragraphs':
+    case 'paragraph':
+      return generator.generateParagraphs(count)
+    case 'sentences':
+    case 'sentence':
+      return generator.generateSentences(count)
+    case 'words':
+    case 'word':
+      return generator.generateWords(count)
+    default:
+      return ''
+  }
 }
 
 export default loremIpsum
