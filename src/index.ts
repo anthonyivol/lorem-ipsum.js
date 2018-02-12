@@ -5,34 +5,72 @@ const FORMATS = ['plain', 'html']
 
 export class LoremIpsum {
   generator: Generator
+  format: string
+  suffix?: string
 
-  constructor(options: GeneratorOptions, format: string = 'plain') {
+  constructor(
+    options: GeneratorOptions,
+    format: string = 'plain',
+    suffix: string
+  ) {
     if (FORMATS.indexOf(format) === -1) {
       throw new Error(
         `${format} is an invalid format. Please use ${FORMATS.join(' or ')}.`
       )
     }
 
+    this.format = format
+    this.suffix = suffix
     this.generator = new Generator(options)
   }
 
-  generateWords(num: number): string {
-    const makeString = this.generator.pluckRandomWord.bind(this.generator)
-    return makeArrayOfStrings(num, makeString).join(' ')
+  getLineEnding() {
+    if (!this.suffix) {
+      const isNode = typeof module !== 'undefined' && module.exports
+      const isReactNative = typeof product !== 'undefined' && product.navigator === 'ReactNative'
+
+      if (!isReactNative && isNode) {
+        return require('os').EOL
+      }
+      return '\n'
+    }
   }
 
-  generateSentences(num: number): string {
+  formatStrings(strings: string[]): string[] {
+    if (this.format === 'html') {
+      return strings.map(str => `<p>${str}</p>`)
+    }
+    return strings
+  }
+
+  formatString(str: string): string {
+    if (this.format === 'html') {
+      return `<p>${str}</p>`
+    }
+    return str
+  }
+
+  generateWords(num: number, noFormat: boolean = false): string {
+    const makeString = this.generator.pluckRandomWord.bind(this.generator)
+    return this.formatString(makeArrayOfStrings(num, makeString).join(' '))
+  }
+
+  generateSentences(num: number, noFormat: boolean = false): string {
     const makeString = this.generator.generateRandomSentence.bind(
       this.generator
     )
-    return `${makeArrayOfStrings(num, makeString).join('. ')}.`
+    return this.formatString(
+      `${makeArrayOfStrings(num, makeString).join('. ')}.`
+    )
   }
 
   generateParagraphs(num: number): string {
     const makeString = this.generator.generateRandomParagraph.bind(
       this.generator
     )
-    return makeArrayOfStrings(num, makeString).join(' ')
+    return this.formatStrings(makeArrayOfStrings(num, makeString)).join(
+      this.getLineEnding()
+    )
   }
 }
 
@@ -46,6 +84,7 @@ export interface LoremIpsumParams {
   sentenceUpperBound?: number
   units?: string
   words?: string[]
+  suffix?: string
 }
 
 const loremIpsum = ({
@@ -58,6 +97,7 @@ const loremIpsum = ({
   sentenceUpperBound = 15,
   units = 'sentences',
   words,
+  suffix,
 }: LoremIpsumParams): string => {
   const options = {
     sentencesPerParagraph: {
@@ -72,7 +112,7 @@ const loremIpsum = ({
     words,
   }
 
-  const loremIpsum = new LoremIpsum(options, format)
+  const loremIpsum = new LoremIpsum(options, format, suffix)
 
   switch (units) {
     case 'paragraphs':
