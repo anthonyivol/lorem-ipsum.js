@@ -4,6 +4,57 @@ lorem-ipsum.js is a JavaScript module for generating passages of lorem ipsum tex
 
 lorem-ipsum.js is compatible with the browser, Node.js, and React Native.
 
+## Using the Class
+
+The class is the recommended way to use lorem-ipsum.js since version 2. It makes it simpler to generate text using the same options.
+
+```
+import { LoremIpsum } from 'lorem-ipsum'
+
+const loremIpsum = new LoremIpsum({
+  sentencesPerParagraph: {
+    min: 3,
+    max: 7,
+  },
+  wordsPerSentence: {
+    min: 5,
+    max: 15,
+  },
+})
+loremIpsum.generateWords(1)
+loremIpsum.generateSentences(5)
+loremIpsum.generateParagraphs(7)
+```
+
+## Using the Function
+
+lorem-ipsum.js version 2 exports a default function that is compatible with the default function exported by lorem-ipsum.js version 1. This function can be utilized in browser scripts and Node.js programs.
+
+```
+import loremIpsum from 'lorem-ipsum'
+
+loremIpsum() // Generates one sentence
+```
+
+You can customize the return value of the function by specifying a number of parameters.
+
+```
+import loremIpsum from 'lorem-ipsum'
+
+loremIpsum({
+  count: 1,                        // Number of words, setences, or paragraphs to generate
+  units: 'sentences',              // paragraphs|paragraph|sentences|sentence|words|word
+  sentenceLowerBound: 5,           // Minimum number of words per sentence
+  sentenceUpperBound: 15,          // Maximum number of words per sentence
+  paragraphLowerBound: 3,          // Minimum number of sentences per paragraph
+  paragraphUpperBound: 7,          // Maximum number of sentences per paragraph
+  format: 'plain',                 // plain|html
+  words: ['ad', 'dolor', ...],     // Custom word dictionary
+  random: Math.random,             // A PRNG function
+  suffix: os.EOL,                  // The character to insert between paragraphs. Defaults to the default EOL for your OS
+})
+```
+
 ## CLI
 
 lorem-ipsum.js includes a command line interface (CLI) program for generating passages of lorem ipsum text directly from your terminal. This CLI program is compatible with Mac OSX, Windows, and Linux. Simply install the module globally to take advantage of this feature.
