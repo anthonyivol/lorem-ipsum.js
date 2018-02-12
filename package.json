@@ -35,6 +35,7 @@
     "@babel/preset-env": "^7.0.0-beta.39",
     "@babel/preset-typescript": "^7.0.0-beta.39",
     "@types/chai": "^4.1.2",
+    "@types/commander": "^2.12.2",
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.1",
     "@types/random-seed": "^0.3.3",
@@ -50,6 +51,7 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "commander": "^2.14.1",
     "random-seed": "^0.3.0"
   }
 }
