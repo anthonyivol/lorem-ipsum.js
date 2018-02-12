@@ -9,11 +9,10 @@ const UNITS_REGEX = /^(paragraphs|paragraph|sentences|sentence|words|word)$/i
 
 program
   .version('2.0.0')
-  .usage('generate 3 words')
-  .usage('generate 3 words --format html --copy')
+  .usage('3 words [options]')
   .command(`[count] [units]`, DESC)
   .option('-c --copy', 'Copy')
-  .option('-f --format <format>', 'Format', FORMATS_REGEX, 'plain')
+  .option('-f --format', 'Format', FORMATS_REGEX, 'plain')
   .action((num: string = '1', units: string = 'sentence') => {
     if (UNITS_REGEX.test(units) === false) {
       console.error(
