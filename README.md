@@ -39,7 +39,7 @@ lorem-ipsum 2 paragraphs
 lorem-ipsum 2 paragraphs --copy
 
 # Two paragraphs formatted as HTML
-lorem-ipsum 2 paragraphs --html
+lorem-ipsum 2 paragraphs --format html
 ```
 
 *Upgrading from version 1.0?* The `--count` and `--units` options have been dropped in favor of the natural langauge interface shown in the examples above. This interface was also available in < version 2 and behaves the same way.
