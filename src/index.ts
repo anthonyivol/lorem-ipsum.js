@@ -17,17 +17,21 @@ export class LoremIpsum {
   }
 
   generateWords(num: number): string {
-    const makeString = this.generator.pluckRandomWord.bind(this)
+    const makeString = this.generator.pluckRandomWord.bind(this.generator)
     return makeArrayOfStrings(num, makeString).join(' ')
   }
 
   generateSentences(num: number): string {
-    const makeString = this.generator.generateRandomSentence.bind(this)
+    const makeString = this.generator.generateRandomSentence.bind(
+      this.generator
+    )
     return `${makeArrayOfStrings(num, makeString).join('. ')}.`
   }
 
   generateParagraphs(num: number): string {
-    const makeString = this.generator.generateRandomParagraph.bind(this)
+    const makeString = this.generator.generateRandomParagraph.bind(
+      this.generator
+    )
     return makeArrayOfStrings(num, makeString).join(' ')
   }
 }
@@ -45,7 +49,7 @@ export interface LoremIpsumParams {
 }
 
 const loremIpsum = ({
-  count = 1,{
+  count = 1,
   format = 'plain',
   paragraphLowerBound = 3,
   paragraphUpperBound = 7,
@@ -68,18 +72,18 @@ const loremIpsum = ({
     words,
   }
 
-  const generator = new LoremIpsum(options, format)
+  const loremIpsum = new LoremIpsum(options, format)
 
   switch (units) {
     case 'paragraphs':
     case 'paragraph':
-      return generator.generateParagraphs(count)
+      return loremIpsum.generateParagraphs(count)
     case 'sentences':
     case 'sentence':
-      return generator.generateSentences(count)
+      return loremIpsum.generateSentences(count)
     case 'words':
     case 'word':
-      return generator.generateWords(count)
+      return loremIpsum.generateWords(count)
     default:
       return ''
   }
