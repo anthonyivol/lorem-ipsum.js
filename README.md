@@ -4,6 +4,46 @@ lorem-ipsum.js is a JavaScript module for generating passages of lorem ipsum tex
 
 lorem-ipsum.js is compatible with the browser, Node.js, and React Native.
 
+## CLI
+
+lorem-ipsum.js includes a command line interface (CLI) program for generating passages of lorem ipsum text directly from your terminal. This CLI program is compatible with Mac OSX, Windows, and Linux. Simply install the module globally to take advantage of this feature.
+
+```
+npm i -g lorem-ipsum
+```
+
+Execute the statement `lorem-ipsum [count] [units]` from your terminal to generate a passage of lorem ipsum text. You can pass additioanl arguments to the program.
+
+Example:
+
+```
+# One word
+lorem-ipsum 1 word
+
+# Two words
+lorem-ipsum 2 words
+
+# One sentence
+lorem-ipsum 1 sentence
+
+# Two sentences
+lorem-ipsum 2 sentences
+
+# One paragraph
+lorem-ipsum 1 paragraph
+
+# Two paragraphs
+lorem-ipsum 2 paragraphs
+
+# Two paragraphs copied to clipboard
+lorem-ipsum 2 paragraphs --copy
+
+# Two paragraphs formatted as HTML
+lorem-ipsum 2 paragraphs --html
+```
+
+*Upgrading from version 1.0?* The `--count` and `--units` options have been dropped in favor of the natural langauge interface shown in the examples above. This interface was also available in < version 2 and behaves the same way.
+
 ## Notes
 
 The "copy to clipboard" feature is compatible on Mac and Windows systems. Linux users will need to install xclip to use this feature. To install xclip on Ubuntu: `sudo apt-get install xclip`.
