@@ -37,7 +37,7 @@ const copyToClipboard = (text: string): Promise<string> => {
           throw new Error(`Copy is not supported for ${platform}.`)
         }
         const command = `echo ${text} | ${getCopyCommand(platform)}`
-        exec((command: string, err: Error) => {
+        exec(command, (err: Error) => {
           if (err) throw err
           return resolve(text)
         })
